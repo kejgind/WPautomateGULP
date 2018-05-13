@@ -1,0 +1,38 @@
+{
+  "name": "wpautomategulp",
+  "version": "1.0.0",
+  "description": "Automate work in WordPress with GULP.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kejgind/WPautomateGULP.git"
+  },
+  "keywords": [
+    "WordPres",
+    "WP",
+    "GULP"
+  ],
+  "author": "Krzysztof Garbowski",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/kejgind/WPautomateGULP/issues"
+  },
+  "homepage": "https://github.com/kejgind/WPautomateGULP#readme",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "browser-sync": "^2.24.4",
+    "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^5.0.0",
+    "gulp-babel": "^7.0.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-imagemin": "^4.1.0",
+    "gulp-sass": "^4.0.1",
+    "gulp-sourcemaps": "^2.6.4",
+    "gulp-uglify-es": "^1.0.1",
+    "gulp-uglifycss": "^1.0.9"
+  }
+}
