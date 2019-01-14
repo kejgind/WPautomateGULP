@@ -44,8 +44,10 @@ const gulpFilePaths = {
     },
     // Babel configuration.
     jsBabelConfiguration: {
-      presets: ["env"],
+      presets: ["@babel/preset-env"],
     },
+    // Specify name of concatinated js file
+    jsConcatName: "scripts.js",
     // Specify destination folder, in which processed by GULP file will be stored.
     jsAssets: "assets/js",
   },
@@ -90,7 +92,7 @@ const gulpFilePaths = {
     proxy: "", // Add your local web page address.
     injectChanges: true,
     open: true,
-    browser: "firefox", // Specify web browser you wan't to use for development.
+    browser: "firefox", // Specify web browser you want to use for development.
   },
 };
 
