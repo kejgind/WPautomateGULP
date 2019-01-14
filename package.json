@@ -1,17 +1,14 @@
 {
   "name": "wpautomategulp",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Automate work in WordPress with GULP.",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kejgind/WPautomateGULP.git"
   },
   "keywords": [
-    "WordPres",
+    "WordPress",
     "WP",
     "GULP"
   ],
