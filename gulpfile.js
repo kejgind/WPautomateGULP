@@ -1,7 +1,7 @@
 /**
  * @file gulpfile.js
  *
- * @version 1.0.0
+ * @version 2.0.0
  *
  * Get and load required plugins
  */
@@ -16,7 +16,6 @@ const babel = require("gulp-babel");
 const jsmin = require("gulp-uglify-es").default;
 const sourcemaps = require("gulp-sourcemaps");
 const browserSync = require("browser-sync").create();
-const bsReload = browserSync.reload;
 
 /**
  * Get all files that need to be watched
@@ -59,11 +58,15 @@ const mapsDir = gulpFilePaths.mapsDir;
 const browserSyncConfig = gulpFilePaths.browserSyncConfig;
 
 /**
- * Run tasks
+ * Create functions for each task
  */
 
-function browserSyncNew(done) {
+function bs() {
   browserSync.init(browserSyncConfig);
+}
+
+function bsReload(done) {
+  browserSync.reload();
 
   done();
 }
@@ -111,9 +114,13 @@ function js(done) {
 
 function watchFiles() {
   gulp.watch(phpWatch, bsReload);
-  gulp.watch(sassSource, css);
+  gulp.watch(sassSource, gulp.series(css, bsReload));
   gulp.watch(jsSource, gulp.series(js, bsReload));
 }
+
+/**
+ * Run tasks
+ */
 
 gulp.task("css", css);
 
@@ -123,10 +130,4 @@ gulp.task("images", images);
 
 gulp.task("default", gulp.parallel(css, js));
 
-gulp.task("watch", gulp.series(watchFiles, browserSyncNew));
-
-// gulp.task("watch", ["default", "browser-sync"], () => {
-//   gulp.watch(phpWatch, bsReload);
-//   gulp.watch(sassSource, ["sass"]);
-//   gulp.watch(jsSource, ["js", bsReload]);
-// });
+gulp.task("watch", gulp.parallel(watchFiles, bs));
