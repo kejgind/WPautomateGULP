@@ -1,7 +1,7 @@
 /**
  * @file gulpfile-config.js
  * 
- * @version 1.0.0
+ * @version 2.0.0
  * 
  * Edit this file to add/change location of your (php, sass/scss/css, js, image)files. Get all files that need to be watched by GULP.
  *
@@ -44,8 +44,10 @@ const gulpFilePaths = {
     },
     // Babel configuration.
     jsBabelConfiguration: {
-      presets: ["env"],
+      presets: ["@babel/preset-env"],
     },
+    // Specify name of concatinated js file
+    jsConcatName: "scripts.js",
     // Specify destination folder, in which processed by GULP file will be stored.
     jsAssets: "assets/js",
   },
@@ -88,9 +90,8 @@ const gulpFilePaths = {
    */
   browserSyncConfig: {
     proxy: "", // Add your local web page address.
-    injectChanges: true,
     open: true,
-    browser: "firefox", // Specify web browser you wan't to use for development.
+    browser: "firefox-esr", // Specify web browser you want to use for development.
   },
 };
 

@@ -1,8 +1,8 @@
 /**
  * @file gulpfile.js
- * 
- * @version 1.0.0
- * 
+ *
+ * @version 2.0.0
+ *
  * Get and load required plugins
  */
 
@@ -16,7 +16,6 @@ const babel = require("gulp-babel");
 const jsmin = require("gulp-uglify-es").default;
 const sourcemaps = require("gulp-sourcemaps");
 const browserSync = require("browser-sync").create();
-const bsReload = browserSync.reload;
 
 /**
  * Get all files that need to be watched
@@ -38,6 +37,7 @@ const jsSource = Object.keys(gulpFilePaths.js.jsSource).map(
   key => gulpFilePaths.js.jsSource[key]
 );
 const jsBabelConfiguration = gulpFilePaths.js.jsBabelConfiguration;
+const jsConcatName = gulpFilePaths.js.jsConcatName;
 const jsAssets = gulpFilePaths.js.jsAssets;
 
 // php
@@ -58,14 +58,21 @@ const mapsDir = gulpFilePaths.mapsDir;
 const browserSyncConfig = gulpFilePaths.browserSyncConfig;
 
 /**
- * Run tasks
+ * Create functions for each task
  */
-gulp.task("browser-sync", () => {
-  browserSync.init(browserSyncConfig);
-});
 
-gulp.task("imagemin", () => {
-  return gulp
+function bs() {
+  browserSync.init(browserSyncConfig);
+}
+
+function bsReload(done) {
+  browserSync.reload();
+
+  done();
+}
+
+function images(done) {
+  gulp
     .src(imgSource)
     .pipe(
       imagemin([
@@ -74,10 +81,12 @@ gulp.task("imagemin", () => {
       ])
     )
     .pipe(gulp.dest(imgAssets));
-});
 
-gulp.task("sass", () => {
-  return gulp
+  done();
+}
+
+function css(done) {
+  gulp
     .src(sassSource)
     .pipe(sourcemaps.init())
     .pipe(sass().on("error", sass.logError))
@@ -86,23 +95,39 @@ gulp.task("sass", () => {
     .pipe(sourcemaps.write(mapsDir))
     .pipe(gulp.dest(cssAssets))
     .pipe(browserSync.stream());
-});
 
-gulp.task("js", () => {
-  return gulp
+  done();
+}
+
+function js(done) {
+  gulp
     .src(jsSource)
     .pipe(sourcemaps.init())
-    .pipe(concatJS("scripts.js"))
+    .pipe(concatJS(jsConcatName))
     .pipe(babel(jsBabelConfiguration))
     .pipe(jsmin())
     .pipe(sourcemaps.write(mapsDir))
     .pipe(gulp.dest(jsAssets));
-});
 
-gulp.task("default", ["sass", "js"]);
+  done();
+}
 
-gulp.task("watch", ["default", "browser-sync"], () => {
+function watchFiles() {
   gulp.watch(phpWatch, bsReload);
-  gulp.watch(sassSource, ["sass"]);
-  gulp.watch(jsSource, ["js", bsReload]);
-});
+  gulp.watch(sassSource, gulp.series(css, bsReload));
+  gulp.watch(jsSource, gulp.series(js, bsReload));
+}
+
+/**
+ * Run tasks
+ */
+
+gulp.task("css", css);
+
+gulp.task("js", js);
+
+gulp.task("images", images);
+
+gulp.task("default", gulp.parallel(css, js));
+
+gulp.task("watch", gulp.parallel(watchFiles, bs));
