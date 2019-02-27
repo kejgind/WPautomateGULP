@@ -8,14 +8,20 @@ Simple GULP config file to automate your workflow when creating WordPress themes
 
 ---
 
-version: 1.0.0
+version: 2.0.1
 
-+ initial release
-+ php, css, js files watch
-+ optimize images
++ updated all plugins to newest versions
+
 
 version: 2.0.0
 
 + switched to gulp v4
 + switched to @babel/core v7.2
 + updated all plugins to newest versions
+
+
+version: 1.0.0
+
++ initial release
++ php, css, js files watch
++ optimize images
