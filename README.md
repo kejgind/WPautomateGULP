@@ -8,6 +8,17 @@ Simple GULP config file to automate your workflow when creating WordPress themes
 
 ---
 
+version: 2.0.2
+
++ updated all plugins to newest versions
++ replaced gulp-uglify-es with gulp-terser
++ added gulp-deporder for managing concatination order
++ added gulp-strip-comments to remove comments after concatination of vendor and custom js files
++ added "cssVendor" and "jsVendor" objects in "gulpfile-config.js" for adding vendor js and css files to bundle them with custom js and css files
++ in "gulpfile.js" updated "js" and "css" functions for bundling vendor files with custom files
++ removed "gulp-sourcemaps" package and creation of sourcemaps files from "css" and "js" functions
+
+
 version: 2.0.1
 
 + updated all plugins to newest versions

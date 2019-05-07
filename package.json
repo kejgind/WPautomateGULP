@@ -1,6 +1,6 @@
 {
   "name": "wpautomategulp",
-  "version": "2.0.0",
+  "version": "2.0.2",
   "description": "Automate work in WordPress with GULP.",
   "main": "index.js",
   "repository": {
@@ -21,15 +21,18 @@
   "devDependencies": {
     "@babel/core": "^7.3.4",
     "@babel/preset-env": "^7.3.4",
-    "browser-sync": "^2.26.3",
+    "browser-sync": "^2.26.5",
     "gulp": "^4.0.0",
     "gulp-autoprefixer": "^6.0.0",
     "gulp-babel": "^8.0.0",
     "gulp-concat": "^2.6.1",
+    "gulp-concat-css": "^3.1.0",
+    "gulp-deporder": "^1.1.0",
     "gulp-imagemin": "^5.0.3",
     "gulp-sass": "^4.0.2",
-    "gulp-sourcemaps": "^2.6.5",
-    "gulp-uglify-es": "^1.0.4",
+    "gulp-strip-comments": "^2.5.2",
+    "gulp-terser": "^1.1.7",
     "gulp-uglifycss": "^1.1.0"
-  }
+  },
+  "dependencies": {}
 }

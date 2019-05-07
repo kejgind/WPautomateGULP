@@ -1,8 +1,8 @@
 /**
  * @file gulpfile-config.js
- * 
- * @version 2.0.0
- * 
+ *
+ * @version 2.0.2
+ *
  * Edit this file to add/change location of your (php, sass/scss/css, js, image)files. Get all files that need to be watched by GULP.
  *
  */
@@ -19,6 +19,8 @@ const gulpFilePaths = {
       sassMain: "src/scss/template.scss",
       sassPartials: "src/scss/partials/*.scss",
     },
+    // Add folders inside "cssVendor" object, with your name and path to required vendor css files.
+    cssVendor: {},
     // CSS autoprefixer configuration. To see what options are available go to https://github.com/postcss/autoprefixer#options.
     autoprefixerConfig: {
       browsers: ["last 2 versions"],
@@ -28,6 +30,8 @@ const gulpFilePaths = {
       maxLineLen: 80,
       uglyComments: true,
     },
+    // Specify name of concatinated js file
+    cssConcatName: "styles.css",
     // Specify destination folder, in which processed by GULP file will be stored.
     cssAssets: "assets/css",
   },
@@ -38,10 +42,12 @@ const gulpFilePaths = {
    */
   js: {
     // Specify source folder(s). Files from those folder will be processed by GULP.
-    // Add folders inside "jsSource" object, with your name and path to required file. Order of the files specified in jsSource will tell GULP the order of concat option. So best option is to specify vendor files at the beginning.
+    // Add folders inside "jsSource" object, with your name and path to required file. Order of the files specified in jsSource will tell GULP the order of concat option.
     jsSource: {
       jsMain: "src/js/scripts.js",
     },
+    // Add folders inside "jsSource" object, with your name and path to required vendor files. Order of the files specified in jsVendor will tell GULP the order of concat option.
+    jsVendor: {},
     // Babel configuration.
     jsBabelConfiguration: {
       presets: ["@babel/preset-env"],

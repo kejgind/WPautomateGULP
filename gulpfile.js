@@ -1,7 +1,7 @@
 /**
  * @file gulpfile.js
  *
- * @version 2.0.0
+ * @version 2.0.2
  *
  * Get and load required plugins
  */
@@ -12,9 +12,11 @@ const sass = require("gulp-sass");
 const autoprefixer = require("gulp-autoprefixer");
 const uglycss = require("gulp-uglifycss");
 const concatJS = require("gulp-concat");
+const concatCSS = require("gulp-concat-css");
+const deporder = require("gulp-deporder");
 const babel = require("gulp-babel");
-const jsmin = require("gulp-uglify-es").default;
-const sourcemaps = require("gulp-sourcemaps");
+const jsmin = require("gulp-terser");
+const removeComments = require("gulp-strip-comments");
 const browserSync = require("browser-sync").create();
 
 /**
@@ -28,13 +30,20 @@ const gulpFilePaths = require("./gulpfile-config");
 const sassSource = Object.keys(gulpFilePaths.css.sassSource).map(
   key => gulpFilePaths.css.sassSource[key]
 );
+const cssVendor = Object.keys(gulpFilePaths.css.cssVendor).map(
+  key => gulpFilePaths.css.cssVendor[key]
+);
 const cssAutoprefixerConfig = gulpFilePaths.css.autoprefixerConfig;
 const cssUglycssConfig = gulpFilePaths.css.uglycssConfig;
+const cssConcatName = gulpFilePaths.css.cssConcatName;
 const cssAssets = gulpFilePaths.css.cssAssets;
 
 // js
 const jsSource = Object.keys(gulpFilePaths.js.jsSource).map(
   key => gulpFilePaths.js.jsSource[key]
+);
+const jsVendor = Object.keys(gulpFilePaths.js.jsVendor).map(
+  key => gulpFilePaths.js.jsVendor[key]
 );
 const jsBabelConfiguration = gulpFilePaths.js.jsBabelConfiguration;
 const jsConcatName = gulpFilePaths.js.jsConcatName;
@@ -88,11 +97,12 @@ function images(done) {
 function css(done) {
   gulp
     .src(sassSource)
-    .pipe(sourcemaps.init())
     .pipe(sass().on("error", sass.logError))
     .pipe(autoprefixer(cssAutoprefixerConfig))
+    .pipe(gulp.src(cssVendor))
+    .pipe(deporder())
+    .pipe(concatCSS(cssConcatName))
     .pipe(uglycss(cssUglycssConfig))
-    .pipe(sourcemaps.write(mapsDir))
     .pipe(gulp.dest(cssAssets))
     .pipe(browserSync.stream());
 
@@ -102,11 +112,19 @@ function css(done) {
 function js(done) {
   gulp
     .src(jsSource)
-    .pipe(sourcemaps.init())
     .pipe(concatJS(jsConcatName))
     .pipe(babel(jsBabelConfiguration))
-    .pipe(jsmin())
-    .pipe(sourcemaps.write(mapsDir))
+    .pipe(
+      jsmin({
+        output: { comments: /requires:/ },
+        compress: { keep_fnames: true, keep_classnames: true },
+        mangle: { keep_fnames: true, keep_classnames: true },
+      })
+    )
+    .pipe(gulp.src(jsVendor))
+    .pipe(deporder())
+    .pipe(concatJS(jsConcatName))
+    .pipe(removeComments())
     .pipe(gulp.dest(jsAssets));
 
   done();
