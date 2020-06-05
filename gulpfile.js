@@ -1,151 +1,146 @@
 /**
  * @file gulpfile.js
  *
- * @version 2.0.2
+ * @version 3.0.0
  *
  * Get and load required plugins
  */
 
-const gulp = require("gulp");
+const { task, series, parallel, src, dest, watch } = require("gulp");
 const imagemin = require("gulp-imagemin");
 const sass = require("gulp-sass");
-const autoprefixer = require("gulp-autoprefixer");
-const uglycss = require("gulp-uglifycss");
-const concatJS = require("gulp-concat");
-const concatCSS = require("gulp-concat-css");
-const deporder = require("gulp-deporder");
-const babel = require("gulp-babel");
-const jsmin = require("gulp-terser");
-const removeComments = require("gulp-strip-comments");
+const postcss = require("gulp-postcss");
+const autoprefixer = require("autoprefixer");
+const cssnano = require("cssnano");
+const srcmaps = require('gulp-sourcemaps');
 const browserSync = require("browser-sync").create();
+const webpack = require("webpack");
 
 /**
- * Get all files that need to be watched
- *
- * Import file paths from gulpfile-config.js
+ * Set paths, config files to be watched
  */
-const gulpFilePaths = require("./gulpfile-config");
 
 // scss/css
-const sassSource = Object.keys(gulpFilePaths.css.sassSource).map(
-  key => gulpFilePaths.css.sassSource[key]
-);
-const cssVendor = Object.keys(gulpFilePaths.css.cssVendor).map(
-  key => gulpFilePaths.css.cssVendor[key]
-);
-const cssAutoprefixerConfig = gulpFilePaths.css.autoprefixerConfig;
-const cssUglycssConfig = gulpFilePaths.css.uglycssConfig;
-const cssConcatName = gulpFilePaths.css.cssConcatName;
-const cssAssets = gulpFilePaths.css.cssAssets;
+const cssConfig = {
+  sourceFile: "src/scss/template.scss",
+  watchFiles: "src/scss/**/*.scss",
+  destDir: "assets/css",
+  mapsDir: "./maps",
+}
 
 // js
-const jsSource = Object.keys(gulpFilePaths.js.jsSource).map(
-  key => gulpFilePaths.js.jsSource[key]
-);
-const jsVendor = Object.keys(gulpFilePaths.js.jsVendor).map(
-  key => gulpFilePaths.js.jsVendor[key]
-);
-const jsBabelConfiguration = gulpFilePaths.js.jsBabelConfiguration;
-const jsConcatName = gulpFilePaths.js.jsConcatName;
-const jsAssets = gulpFilePaths.js.jsAssets;
+const jsConfig = {
+  webpackConfigFile: "./webpack.config.js",
+  watchFiles: "src/js/**/*.js",
+}
 
 // php
-const phpWatch = gulpFilePaths.phpWatch;
+const phpConfig = {
+  watchFiles: "**/*.php",
+}
 
-//images
-const imgSource = Object.keys(gulpFilePaths.image.imgSource).map(
-  key => gulpFilePaths.image.imgSource[key]
-);
-const jpegtranConfig = gulpFilePaths.image.jpegtranConfig;
-const optipngConfig = gulpFilePaths.image.optipngConfig;
-const imgAssets = gulpFilePaths.image.imgAssets;
+// images
+const imageConfig = {
+  sourceFiles: "src/img/*",
+  destDir: "assets/img",
+  // Specify configuration for optipng and jpegtran plugins. For options for specific image format start from https://github.com/sindresorhus/gulp-imagemin#usage.
+  jpegtranConfig: {
+    progressive: true,
+  },
+  optipngConfig: {
+    optimizationLevel: 5,
+  },
+}
 
-// source maps folders
-const mapsDir = gulpFilePaths.mapsDir;
+// icons
+const iconConfig = {
+  sourceFiles: "src/icons/*",
+  destDir: "assets/icons",
+}
 
 // browserSync settings
-const browserSyncConfig = gulpFilePaths.browserSyncConfig;
+const browserSyncConfig = {
+  proxy: "", // Add your local web page address.
+  injectChanges: true,
+  open: false,
+  browser: "firefox", // Specify web browser you want to use for development.
+};
 
 /**
- * Create functions for each task
+ * Declare GULP params and functions
  */
 
+// BrowserSync initialization.
 function bs() {
   browserSync.init(browserSyncConfig);
 }
 
+// Handle BrowserSync reload.
 function bsReload(done) {
   browserSync.reload();
-
   done();
 }
 
-function images(done) {
-  gulp
-    .src(imgSource)
-    .pipe(
-      imagemin([
-        imagemin.jpegtran(jpegtranConfig),
-        imagemin.optipng(optipngConfig),
-      ])
-    )
-    .pipe(gulp.dest(imgAssets));
-
-  done();
-}
-
-function css(done) {
-  gulp
-    .src(sassSource)
-    .pipe(sass().on("error", sass.logError))
-    .pipe(autoprefixer(cssAutoprefixerConfig))
-    .pipe(gulp.src(cssVendor))
-    .pipe(deporder())
-    .pipe(concatCSS(cssConcatName))
-    .pipe(uglycss(cssUglycssConfig))
-    .pipe(gulp.dest(cssAssets))
+// Handle style (scss/css) files.
+function processCss(done) {
+  var plugins = [
+    autoprefixer(),
+    cssnano()
+  ];
+  src(cssConfig.sourceFile)
+    .pipe(srcmaps.init())
+    .pipe(sass({
+      includePaths: ['node_modules']
+    }).on("error", sass.logError))
+    .pipe(postcss(plugins))
+    .pipe(srcmaps.write(cssConfig.mapsDir))
+    .pipe(dest(cssConfig.destDir))
     .pipe(browserSync.stream());
-
   done();
 }
 
-function js(done) {
-  gulp
-    .src(jsSource)
-    .pipe(concatJS(jsConcatName))
-    .pipe(babel(jsBabelConfiguration))
-    .pipe(
-      jsmin({
-        output: { comments: /requires:/ },
-        compress: { keep_fnames: true, keep_classnames: true },
-        mangle: { keep_fnames: true, keep_classnames: true },
-      })
-    )
-    .pipe(gulp.src(jsVendor))
-    .pipe(deporder())
-    .pipe(concatJS(jsConcatName))
-    .pipe(removeComments())
-    .pipe(gulp.dest(jsAssets));
-
+// Handle scripts (javascript) files.
+function processJs(done) {
+  webpack(require(jsConfig.webpackConfigFile), function (err, stats) {
+    if (err) {
+      console.error(err.toString());
+    }
+    console.error(stats.toString());
+  });
   done();
 }
 
+// Handle image (jpg, png) files.
+function processImg(done) {
+  src(imageConfig.sourceFiles)
+    .pipe(imagemin(
+      [
+        imagemin.jpegtran(imageConfig.jpegtranConfig),
+        imagemin.optipng(imageConfig.optipngConfig),
+      ]
+    ))
+    .pipe(dest(imageConfig.destDir));
+  done();
+}
+
+// Handle icons (jpg, png) files.
+function processIcons(done) {
+  src(iconConfig.sourceFiles)
+    .pipe(imagemin())
+    .pipe(dest(iconConfig.destDir));
+  done();
+}
+
+// Set files watching function.
 function watchFiles() {
-  gulp.watch(phpWatch, bsReload);
-  gulp.watch(sassSource, gulp.series(css, bsReload));
-  gulp.watch(jsSource, gulp.series(js, bsReload));
+  watch([phpConfig.watchFiles], { ignoreInitial: false });
+  watch([cssConfig.watchFiles], { ignoreInitial: false }, processCss);
+  watch([jsConfig.watchFiles], { ignoreInitial: false }, series(processJs, bsReload));
 }
 
-/**
- * Run tasks
- */
-
-gulp.task("css", css);
-
-gulp.task("js", js);
-
-gulp.task("images", images);
-
-gulp.task("default", gulp.parallel(css, js));
-
-gulp.task("watch", gulp.parallel(watchFiles, bs));
+// Create various tasks.
+task("css", processCss);
+task("js", processJs);
+task('imagemin', parallel(processImg, processIcons));
+task("default", parallel(processCss, processJs));
+task("watch", parallel(watchFiles, bs));
