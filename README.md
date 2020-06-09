@@ -8,6 +8,12 @@ Simple GULP config file to automate your workflow when creating WordPress themes
 
 ---
 
+version: 3.0.1
+
++ updated all plugins to newest versions
++ added shorthand replacement for `querySelector`, `querySelectorAll` and `addEventListener` in `scripts.js` file
+
+
 version: 3.0.0
 
 + updated all plugins to newest versions
