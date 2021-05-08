@@ -1,0 +1,17 @@
+// vendor/external stylesheets
+@use "vendor";
+
+// base classes/configs etc.
+@use 'base';
+
+// utility classes
+@use 'utility';
+
+// style ui elements
+@use "ui";
+
+// style common components
+@use "components";
+
+// front-page
+@use "templates/front-page";

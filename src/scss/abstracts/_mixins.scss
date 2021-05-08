@@ -1,0 +1,6 @@
+// Mixin for adding simple grid content
+@mixin simple-grid($col-count, $col-gap) {
+  display: grid;
+  grid-template-columns: repeat($col-count, 1fr);
+  column-gap: $col-gap;
+}

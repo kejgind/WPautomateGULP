@@ -1,0 +1,52 @@
+/*
+Placeholder image size class
+*/
+%image-size {
+  width: 100%;
+  height: 100%;
+  max-height: 100%;
+  object-position: center;
+}
+
+/*
+constant aspect ratio container/media (image/video)
+container needs also extra added padding-top
+*/
+.ar-container {
+  position: relative;
+  width: 100%;
+  height: 0;
+  overflow: hidden;
+}
+
+.ar-media {
+  @extend %image-size;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  object-fit: cover;
+}
+
+/*
+Mixins for image fitted inside container
+*/
+$image-type: (
+  cover: cover,
+  contain: contain,
+);
+
+@each $type, $value in $image-type {
+  .image-fit-#{$type} {
+    @extend %image-size;
+    object-fit: $value;
+  }
+}
+
+/*
+Class used for @iconfu/svg-inject library
+*/
+img.injectable {
+  visibility: hidden;
+}

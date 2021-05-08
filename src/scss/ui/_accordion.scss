@@ -1,0 +1,66 @@
+@use '../abstracts' as *;
+
+.accordion {
+  transition: all 250ms;
+
+  .accordion__item {
+    position: relative;
+  }
+
+  .accordion__title {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    font-weight: 600;
+    font-size: 1.4rem;
+    line-height: 1.2;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+  }
+
+  .accordion__title__name {
+  }
+
+  .accordion__title__toggler {
+    display: flex;
+    width: 5rem;
+    height: 5rem;
+    transform-origin: center;
+    transition: transform 250ms;
+  }
+
+  .accordion__title[aria-expanded="false"] {
+    .accordion__title__toggler {
+      transform: scaleY(1);
+    }
+  }
+
+  .accordion__title[aria-expanded="true"] {
+    .accordion__title__toggler {
+      transform: scaleY(-1);
+    }
+  }
+
+  .accordion__content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    overflow: hidden;
+    transition: all 200ms linear;
+  }
+
+  .accordion__text {
+    padding-top: 1.7rem;
+    padding-bottom: 1.7rem;
+    font-size: 1.2rem;
+    line-height: 1.8rem;
+
+    p:not(:last-of-type) {
+      margin-bottom: 1rem;
+    }
+  }
+}

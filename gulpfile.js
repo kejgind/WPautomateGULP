@@ -1,18 +1,18 @@
 /**
  * @file gulpfile.js
  *
- * @version 3.0.0
+ * @version 4.0.0
  *
  * Get and load required plugins
  */
 
 const { task, series, parallel, src, dest, watch } = require("gulp");
 const imagemin = require("gulp-imagemin");
-const sass = require("gulp-sass");
+const sass = require("gulp-dart-sass");
 const postcss = require("gulp-postcss");
 const autoprefixer = require("autoprefixer");
 const cssnano = require("cssnano");
-const srcmaps = require('gulp-sourcemaps');
+const srcmaps = require("gulp-sourcemaps");
 const browserSync = require("browser-sync").create();
 const webpack = require("webpack");
 
@@ -22,22 +22,22 @@ const webpack = require("webpack");
 
 // scss/css
 const cssConfig = {
-  sourceFile: "src/scss/template.scss",
+  sourceFile: "src/scss/theme.scss",
   watchFiles: "src/scss/**/*.scss",
   destDir: "assets/css",
   mapsDir: "./maps",
-}
+};
 
 // js
 const jsConfig = {
   webpackConfigFile: "./webpack.config.js",
   watchFiles: "src/js/**/*.js",
-}
+};
 
 // php
 const phpConfig = {
   watchFiles: "**/*.php",
-}
+};
 
 // images
 const imageConfig = {
@@ -50,13 +50,13 @@ const imageConfig = {
   optipngConfig: {
     optimizationLevel: 5,
   },
-}
+};
 
 // icons
 const iconConfig = {
   sourceFiles: "src/icons/*",
   destDir: "assets/icons",
-}
+};
 
 // browserSync settings
 const browserSyncConfig = {
@@ -83,15 +83,14 @@ function bsReload(done) {
 
 // Handle style (scss/css) files.
 function processCss(done) {
-  var plugins = [
-    autoprefixer(),
-    cssnano()
-  ];
+  var plugins = [autoprefixer(), cssnano()];
   src(cssConfig.sourceFile)
     .pipe(srcmaps.init())
-    .pipe(sass({
-      includePaths: ['node_modules']
-    }).on("error", sass.logError))
+    .pipe(
+      sass({
+        includePaths: ["node_modules"],
+      }).on("error", sass.logError)
+    )
     .pipe(postcss(plugins))
     .pipe(srcmaps.write(cssConfig.mapsDir))
     .pipe(dest(cssConfig.destDir))
@@ -113,21 +112,19 @@ function processJs(done) {
 // Handle image (jpg, png) files.
 function processImg(done) {
   src(imageConfig.sourceFiles)
-    .pipe(imagemin(
-      [
+    .pipe(
+      imagemin([
         imagemin.jpegtran(imageConfig.jpegtranConfig),
         imagemin.optipng(imageConfig.optipngConfig),
-      ]
-    ))
+      ])
+    )
     .pipe(dest(imageConfig.destDir));
   done();
 }
 
 // Handle icons (jpg, png) files.
 function processIcons(done) {
-  src(iconConfig.sourceFiles)
-    .pipe(imagemin())
-    .pipe(dest(iconConfig.destDir));
+  src(iconConfig.sourceFiles).pipe(imagemin()).pipe(dest(iconConfig.destDir));
   done();
 }
 
@@ -135,12 +132,16 @@ function processIcons(done) {
 function watchFiles() {
   watch([phpConfig.watchFiles], { ignoreInitial: false });
   watch([cssConfig.watchFiles], { ignoreInitial: false }, processCss);
-  watch([jsConfig.watchFiles], { ignoreInitial: false }, series(processJs, bsReload));
+  watch(
+    [jsConfig.watchFiles],
+    { ignoreInitial: false },
+    series(processJs, bsReload)
+  );
 }
 
 // Create various tasks.
 task("css", processCss);
 task("js", processJs);
-task('imagemin', parallel(processImg, processIcons));
+task("imagemin", parallel(processImg, processIcons));
 task("default", parallel(processCss, processJs));
 task("watch", parallel(watchFiles, bs));

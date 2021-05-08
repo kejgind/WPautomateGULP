@@ -1,0 +1,11 @@
+@use '../abstracts' as *;
+
+body {
+  position: relative;
+  overflow-x: hidden;
+  // background-color: var(--clr-black);
+}
+
+.main {
+  position: relative;
+}

@@ -1,6 +1,6 @@
 {
   "name": "wpautomategulp",
-  "version": "2.0.2",
+  "version": "4.0.0",
   "description": "Automate work in WordPress with GULP.",
   "main": "index.js",
   "repository": {
@@ -19,19 +19,32 @@
   },
   "homepage": "https://github.com/kejgind/WPautomateGULP#readme",
   "devDependencies": {
-    "@babel/core": "^7.10.2",
-    "@babel/preset-env": "^7.10.2",
-    "autoprefixer": "^9.8.0",
+    "@babel/core": "^7.14.0",
+    "@babel/preset-env": "^7.14.1",
+    "autoprefixer": "^10.2.5",
     "babel-loader": "^8.1.0",
     "browser-sync": "^2.26.7",
-    "cssnano": "^4.1.10",
+    "cssnano": "^5.0.2",
+    "eslint": "^7.26.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-config-standard": "^16.0.2",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^3.4.0",
+    "eslint-plugin-promise": "^4.3.1",
+    "eslint-plugin-standard": "^4.1.0",
     "gulp": "^4.0.2",
+    "gulp-dart-sass": "^1.0.2",
     "gulp-imagemin": "^7.1.0",
-    "gulp-postcss": "^8.0.0",
-    "gulp-sass": "^4.1.0",
-    "gulp-sourcemaps": "^2.6.5",
-    "webpack": "^4.43.0",
-    "webpack-cli": "^3.3.11"
-  },
-  "dependencies": {}
+    "gulp-postcss": "^9.0.0",
+    "gulp-sourcemaps": "^3.0.0",
+    "prettier": "^2.2.1",
+    "stylelint": "^13.13.1",
+    "stylelint-config-prettier": "^8.0.2",
+    "stylelint-config-rational-order": "^0.1.2",
+    "stylelint-order": "^4.1.0",
+    "stylelint-prettier": "^1.2.0",
+    "webpack": "^5.36.2",
+    "webpack-cli": "^4.7.0"
+  }
 }

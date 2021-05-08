@@ -1,0 +1,17 @@
+@use '../abstracts' as *;
+
+:root {
+  @each $name, $color in $colors {
+    --clr-#{"" + $name}: #{$color};
+  }
+
+  @each $name, $size in $container-padding {
+    @if $name == mobile {
+      --container-padding: #{$size};
+    } @else if $name == desktop {
+      @include screen(desktop) {
+        --container-padding: #{$size};
+      }
+    }
+  }
+}

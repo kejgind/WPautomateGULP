@@ -1,0 +1,27 @@
+.btn {
+  --h-pad: 2.5rem;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  height: 3.6rem;
+  padding-right: var(--h-pad);
+  padding-left: var(--h-pad);
+  font-size: 1rem;
+  font-family: sans-serif;
+  line-height: 1.2rem;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 150ms;
+
+  &--black {
+    color: var(--clr-white);
+    background-color: var(--clr-black);
+
+    &:hover,
+    &:focus {
+    }
+  }
+}

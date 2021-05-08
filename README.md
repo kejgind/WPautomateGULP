@@ -8,6 +8,16 @@ Simple GULP config file to automate your workflow when creating WordPress themes
 
 ---
 
+version: 4.0.0
+
++ updated all plugins to newest versions
++ added `eslint` and `stylelint` with separate .md (instructions for vs-code)
++ changed from `gulp-sass` to `gulp-dart-sass` ad added base scss structure directories/files (now using `@use` and `@forward`)
++ moved to `webpack_v5`
++ added base js structure directories/files (added base modules)
++ added WP Theme structure directories/files (`functions.php`, `styles.css`, `index.php`, etc.)
+
+
 version: 3.0.1
 
 + updated all plugins to newest versions

@@ -6,7 +6,6 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, "assets/js"),
-    filename: "[name].js",
   },
   module: {
     rules: [
@@ -23,9 +22,9 @@ module.exports = {
     ],
   },
   externals: {
-    jquery: 'jQuery',
+    jquery: "jQuery",
   },
-  mode: "production",
+  mode: "development",
 };
 
 /**
